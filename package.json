@@ -1,0 +1,19 @@
+{
+  "name": "event_machine",
+  "version": "0.9.0",
+  "description": "events",
+  "main": "index.js",
+  "author": "Zakirjanov Rinat",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rinat93/event_machine.git"
+  },
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/Rinat93/event_machine/issues"
+  },
+  "homepage": "https://github.com/Rinat93/event_machine#readme"
+}
