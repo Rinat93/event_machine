@@ -1,6 +1,6 @@
 {
   "name": "events-machine",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "events",
   "main": "index.js",
   "author": "Zakirjanov Rinat",

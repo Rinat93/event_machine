@@ -23,7 +23,11 @@ class Events {
         this.value = {'dom': obj, 'event_type': event, 'callback':func};
         new Promise(this.addEvent).then((e)=>{
             e.forEach(el => {
-                el['dom'].addEventListener(el['event_type'], el['callback'], false);
+                if (typeof el['dom'] == "string") {
+                    document.getElementById(el['dom']).addEventListener(el['event_type'], el['callback'], false);
+                } else {
+                    el['dom'].addEventListener(el['event_type'], el['callback'], false);
+                }
             });
         });
     }
@@ -31,46 +35,66 @@ class Events {
     // Функция для записи в глобальный объект новых событии
     addEvent(resolve,reject){
         if (this.value['dom']) {
+            // Все события хранятся в этой переменной
+            let events_add = [];
+
             if (Array.isArray(this.value['dom']) === false){
                 this.value['dom'] = [this.value['dom']];
             }
+
             this.value['dom'].forEach((add,i,arr)=>{
                 if (Array.isArray(this.value['event_type']) === false  && Array.isArray(this.value['callback']) === false) {
                     if (this.obj.length === 0) {
-                        this.obj = [{
+                        let st = {
                             'dom': add,
                             'event_type': this.value['event_type'],
                             'callback': this.value['callback']
-                        }];
+                        };
+                        if (st in this.obj === false) {
+                            this.obj = [st];
+                            events_add.push(st)
+                        }
                     } else {
-                        this.obj.push({
+                        let st = {
                             'dom': add,
                             'event_type': this.value['event_type'],
                             'callback': this.value['callback']
-                        });
+                        };
+                        if (st in this.obj === false) {
+                            this.obj.push(st);
+                            events_add.push(st)
+                        }
                     }
                 } else if (Array.isArray(this.value['event_type'])){
                     // Если множество событии
                     this.value['event_type'].forEach(ev_type=>{
-                        this.obj.push({
+                        let st = {
                             'dom': add,
                             'event_type': ev_type,
                             'callback': this.value['callback']
-                        });
+                        };
+                        if (st in this.obj === false) {
+                            this.obj.push(st);
+                            events_add.push(st)
+                        }
                     });
                 }
                 if (Array.isArray(this.value['callback'])){
                     // Если множество каллбэков
                     this.value['callback'].forEach(fn=>{
-                        this.obj.push({
+                        let st = {
                             'dom': add,
                             'event_type': this.value['event_type'],
                             'callback': fn
-                        });
+                        };
+                        if (st in this.obj === false) {
+                            this.obj.push(st);
+                            events_add.push(st);
+                        }
                     });
                 }
             });
-            resolve(this.obj);
+            resolve(events_add);
         } else {
             reject();
         }
