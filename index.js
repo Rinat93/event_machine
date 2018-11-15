@@ -23,7 +23,7 @@ class Events {
         this.value = {'dom': obj, 'event_type': event, 'callback':func};
         new Promise(this.addEvent).then((e)=>{
             e.forEach(el => {
-                el['dom'].addEventListener(el['event_type'], el['callback'], false);
+                document.getElementById(el['dom']).addEventListener(el['event_type'], el['callback'], false);
             });
         });
     }
