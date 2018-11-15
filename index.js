@@ -24,11 +24,15 @@ class Events {
         new Promise(this.addEvent).then((e)=>{
             e.forEach(el => {
                 if (typeof el['dom'] == "string") {
-                    document.getElementById(el['dom']).addEventListener(el['event_type'], el['callback'], false);
+                    if (document.getElementById(el['dom'])) {
+                        document.getElementById(el['dom']).addEventListener(el['event_type'], el['callback'], false);
+                    }
                 } else {
                     el['dom'].addEventListener(el['event_type'], el['callback'], false);
                 }
             });
+        }).catch(e => {
+            console.log(e);
         });
     }
 
@@ -38,12 +42,13 @@ class Events {
             // Все события хранятся в этой переменной
             let events_add = [];
 
-            if (Array.isArray(this.value['dom']) === false){
+            if (Array.isArray(this.value['dom']) === false && (this.value['dom'].length === undefined || typeof this.value['dom'] === 'string')){
                 this.value['dom'] = [this.value['dom']];
             }
-
-            this.value['dom'].forEach((add,i,arr)=>{
-                if (Array.isArray(this.value['event_type']) === false  && Array.isArray(this.value['callback']) === false) {
+            // console.log(this.value)
+            for (let add of this.value['dom']) {
+                // this.value['dom'].forEach((add,i,arr)=>{
+                if (Array.isArray(this.value['event_type']) === false && Array.isArray(this.value['callback']) === false) {
                     if (this.obj.length === 0) {
                         let st = {
                             'dom': add,
@@ -65,9 +70,9 @@ class Events {
                             events_add.push(st)
                         }
                     }
-                } else if (Array.isArray(this.value['event_type'])){
+                } else if (Array.isArray(this.value['event_type'])) {
                     // Если множество событии
-                    this.value['event_type'].forEach(ev_type=>{
+                    this.value['event_type'].forEach(ev_type => {
                         let st = {
                             'dom': add,
                             'event_type': ev_type,
@@ -79,9 +84,9 @@ class Events {
                         }
                     });
                 }
-                if (Array.isArray(this.value['callback'])){
+                if (Array.isArray(this.value['callback'])) {
                     // Если множество каллбэков
-                    this.value['callback'].forEach(fn=>{
+                    this.value['callback'].forEach(fn => {
                         let st = {
                             'dom': add,
                             'event_type': this.value['event_type'],
@@ -93,10 +98,11 @@ class Events {
                         }
                     });
                 }
-            });
+            }
+            // });
             resolve(events_add);
         } else {
-            reject();
+            reject(this.value['dom']);
         }
     }
 
